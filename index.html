@@ -1,7 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
 <head>
+  <!-- Installing trackjs.com -->
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "6ee3c756618f4d76b00db68d3e6f1063"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+
+
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -88,6 +99,14 @@
   </main>
 
   <script>
+    class ValidationError extends Error {
+      constructor(message) {
+        super(message); // (1)
+        this.name = "CustomError"; // (2)
+      }
+    }
+
+
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -100,8 +119,148 @@
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
+    const timerLabel = "Timer";
+    let count = 1;
+    const sampleTable = [
+      { Fname: "Kiet", Lname: "Dang" },
+      { Fname: "Bob", Lname: "Moma" },
+      { Fname: "Charlie", Lname: "Puthhh" }
+    ];
+
+
     // Start your code here
+    errorBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const label = btn.textContent;
+
+        switch(label) {
+          case "Console Log":
+          console.log("This is a console.log demo");
+          break;
+
+          case "Console Error":
+            console.error("This is a console.error demo");
+            break;
+
+          case "Console Count":
+            console.count("Console Count Label");
+            break;
+
+          case "Console Warn":
+            console.warn("This is a console.warn demo");
+            break;
+
+          case "Console Assert":
+            /*This block was comment out to test for Assert*/
+            // console.assert(false, "Assertion failed: This message only shows if the assertion is false.");
+            // break;
+            try {
+              if (true) {
+                throw new Error("Assertion failed: This condition was false.");
+              }
+            } catch (error) {
+              console.error("Caught in catch:", error.message);
+              throw new ValidationError("Whoops! Custom Error message called.");
+            }
+            break;
+
+
+          case "Console Clear":
+            console.clear();
+            break;
+
+          case "Console Dir":
+            console.dir(document.body); // example: inspecting the body DOM element
+            break;
+
+          case "Console dirxml":
+            console.dirxml(document.body); // shows XML/HTML representation
+            break;
+
+          case "Console Group Start":
+            console.group("Sample Group");
+            break;
+
+          case "Console Group End":
+            console.groupEnd();
+            break;
+
+          case "Console Table":
+            console.table(sampleTable);
+            break;
+
+          case "Start Timer":
+            console.time(timerLabel);
+            break;
+
+          case "End Timer":
+            console.timeEnd(timerLabel);
+            break;
+
+          case "Console Trace":
+            function deepest() {
+              console.trace("This is the trace:");
+            }
+
+            function deeper() {
+              deepest();
+            }
+
+            function deep() {
+              deeper();
+            }
+
+            function handleBtnClick() {
+              deep();
+            }
+
+            handleBtnClick();
+            break;
+          
+          case "Trigger a Global Error":
+            //throw new Error ("Global Error Triggered.")
+
+            // This will be caught by window.onerror
+            nonexistentFunction();
+            break;
+
+
+          case "Try Catch Demo":
+            try {
+              // Attempt to access a DOM element that may not exist
+              const missingElement = document.querySelector('#nonexistent-id');
+
+              if (!missingElement) {
+                throw new ReferenceError("DOM element with id 'nonexistent-id' not found.");
+              }
+
+              // Try to manipulate it
+              missingElement.textContent = "You found me!";
+            } catch (error) {
+              console.error("Caught an error:", error.name, "-", error.message);
+            } finally {
+              console.log("Finally block executed. Clean up or log completion here.");
+            }
+            break;
+
+
+
+        }
+      })
+    })
+
     // You may move this JS to another file if you wish
+    window.onerror = function(message, source, lineno, colno, error) {
+      console.log("Global Error Caught:");
+      console.log("Message:", message);
+      console.log("Source:", source);
+      console.log("Line:", lineno);
+      console.log("Column:", colno);
+      console.log("Error Object:", error);
+      // Simulate sending to server:
+      // fetch('/log', { method: 'POST', body: JSON.stringify({ message, source, lineno, colno }) });
+    };
+
   </script>
 </body>
 
