@@ -161,6 +161,8 @@
             } catch (error) {
               console.error("Caught in catch:", error.message);
               throw new ValidationError("Whoops! Custom Error message called.");
+            } finally {
+              console.log("Finally block executed.")
             }
             break;
 
@@ -223,42 +225,17 @@
             // This will be caught by window.onerror
             nonexistentFunction();
             break;
-
-
-          case "Try Catch Demo":
-            try {
-              // Attempt to access a DOM element that may not exist
-              const missingElement = document.querySelector('#nonexistent-id');
-
-              if (!missingElement) {
-                throw new ReferenceError("DOM element with id 'nonexistent-id' not found.");
-              }
-
-              // Try to manipulate it
-              missingElement.textContent = "You found me!";
-            } catch (error) {
-              console.error("Caught an error:", error.name, "-", error.message);
-            } finally {
-              console.log("Finally block executed. Clean up or log completion here.");
-            }
-            break;
-
-
-
         }
       })
     })
 
     // You may move this JS to another file if you wish
     window.onerror = function(message, source, lineno, colno, error) {
-      console.log("Global Error Caught:");
       console.log("Message:", message);
       console.log("Source:", source);
       console.log("Line:", lineno);
       console.log("Column:", colno);
-      console.log("Error Object:", error);
-      // Simulate sending to server:
-      // fetch('/log', { method: 'POST', body: JSON.stringify({ message, source, lineno, colno }) });
+      console.log("Error:", error);
     };
 
   </script>
